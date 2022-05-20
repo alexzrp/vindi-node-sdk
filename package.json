@@ -1,8 +1,11 @@
 {
-  "name": "vindi-node-sdk",
-  "version": "1.0.5",
+  "name": "@zrpaplicacoes/vindi-node-sdk",
+  "version": "1.0.6",
   "description": "Node.js SDK for vindi payment gateway",
   "author": "Claudinei Machado <claudinei@kolinalabs.com>",
+  "contributors": [
+    "Alex Gotardi <alexgotardi@gmail.com>"
+  ],
   "main": "index.js",
   "keywords": [
     "vindi",
@@ -13,7 +16,7 @@
   "license": "Apache-2.0",
   "scripts": {},
   "dependencies": {
-    "request": "^2.88.0"
+    "axios": "^0.27.2"
   },
   "repository": {
     "type": "git",
