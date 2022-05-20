@@ -5,7 +5,7 @@
 ## Instalação
 
 ```
-npm install vindi-node-sdk
+yarn install vindi-node-sdk
 
 ```
 
@@ -93,7 +93,7 @@ Vindi.customer.all().then(data => {
 
 Os parâmetros aceitos para filtros e paginação, bem como as exigências sobre os formatos e codificação são descritos [aqui](https://atendimento.vindi.com.br/hc/pt-br/articles/204163150)
 
-Este SDK foi desenvolvido de modo a atender o padrão atual da API Vindi. 
+Este SDK foi desenvolvido de modo a atender o padrão atual da API Vindi.
 
 ### Paginação e Ordenação
 

@@ -46,7 +46,7 @@ class Resource {
         return new Promise((resolve, reject) => {
             this.client.get(uri, params).then(response => {
                 
-                const items = response.body[this.endpoint()]
+                const items = response.data[this.endpoint()]
                 const links = Links.parse(response.headers['link'])
 
                 resolve({
@@ -68,8 +68,8 @@ class Resource {
     create(data) {
         return new Promise((resolve, reject) => {
             this.client.post(this.url(), data).then(response => {
-                const key = Object.keys(response.body)[0]
-                resolve(response.body[key])
+                const key = Object.keys(response.data)[0]
+                resolve(response.data[key])
             }).catch(error => reject(error))
         })
     }
@@ -111,8 +111,8 @@ class Resource {
     }
 
     response(response, resolve) {
-        const key = Object.keys(response.body)[0]
-        resolve(response.body[key])
+        const key = Object.keys(response.data)[0]
+        resolve(response.data[key])
     }
 }
 

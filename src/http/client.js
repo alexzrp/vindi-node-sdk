@@ -1,74 +1,69 @@
-
-const BaseRequest = require('request')
-const fs = require('fs')
+const Axios = require('axios')
 
 class Client {
-
-    constructor(config) {
-
-        if (!config.apiKey) {
-            config.apiKey = process.env.VINDI_API_KEY
-        }
-
-        if (!config.apiKey) {
-            throw new Error('The apiKey is required.')
-        }
-        
-        this.config = config ? config : {}
-    }
-
-    encodeApiKey() {
-        return Buffer.from(this.config.apiKey).toString('base64')
+  constructor(config) {
+    
+    if (!config.apiKey) {
+      config.apiKey = process.env.VINDI_API_KEY
     }
     
-    createBasicAuth() {
-        return `Basic ${this.encodeApiKey()}`
+    if (!config.apiKey) {
+      throw new Error('The apiKey is required.')
     }
     
-    request(method, uri, options) {
-                
-        options.uri = uri
-        options.method = method
-        options.headers = {
-            Authorization: this.createBasicAuth()
+    this.config = config ? config : {}
+  
+    this.axios = Axios.create({
+      headers: {
+        Authorization: this.createBasicAuth(),
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    });
+    // Manage vindi rate-limit. Retry after rate limit reset timestamp
+    this.axios.interceptors.response.use(
+      response => response,
+      (error) => {
+        if (
+          error.response.status === 429 &&
+          error.response.headers['rate-limit-reset']
+        ) {
+          const resetTimestampInMs =
+            error.response.headers['rate-limit-reset'] * 1000;
+          return new Promise(resolve => {
+            setTimeout(() => {
+              client.request(error.response.config).then(resolve);
+            }, resetTimestampInMs - Date.now());
+          });
         }
-
-        if (!options.hasOwnProperty('json')) {
-            options.json = true
-        }
-
-        options.cert = fs.readFileSync(`${__dirname}/ssl/ca-bundle.crt`)
-
-        return new Promise((resolve, reject) => {
-
-            BaseRequest(options, (error, response, body) => {
-                
-                const errorCodes = /(5|4)[0-9]{2}/
-
-                if (error) reject(error)
-
-                if (errorCodes.test(response.statusCode)) reject(body)
-
-                resolve(response)
-            })
-        })
-    }
-
-    get(uri, params) {
-        return this.request('GET', uri, params)
-    }
-
-    post(uri, params) {
-        return this.request('POST', uri, { json: params })
-    }
-
-    put(uri, params) {
-        return this.request('PUT', uri, { json: params })
-    }
-
-    delete(uri, params) {
-        return this.request('DELETE', uri, params)
-    }
+        return Promise.reject(error);
+      },
+    );
+  }
+  
+  encodeApiKey() {
+    return Buffer.from(this.config.apiKey).toString('base64')
+  }
+  
+  createBasicAuth() {
+    return `Basic ${this.encodeApiKey()}`
+  }
+  
+  get(uri, params) {
+    return this.axios.get(uri, { params })
+  }
+  
+  post(uri, params) {
+    return this.axios.post(uri, params)
+  }
+  
+  put(uri, params) {
+    return this.axios.put(uri, params)
+  }
+  
+  delete(uri, params) {
+    return this.axios.delete(uri, { params })
+  }
 }
 
 module.exports = Client
