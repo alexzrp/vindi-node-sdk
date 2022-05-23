@@ -25,6 +25,8 @@ class Client {
       response => response,
       (error) => {
         if (
+          error &&
+          error.response &&
           error.response.status === 429 &&
           error.response.headers['rate-limit-reset']
         ) {
