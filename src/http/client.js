@@ -34,7 +34,7 @@ class Client {
             error.response.headers['rate-limit-reset'] * 1000;
           return new Promise(resolve => {
             setTimeout(() => {
-              client.request(error.response.config).then(resolve);
+              this.axios.request(error.response.config).then(resolve);
             }, resetTimestampInMs - Date.now());
           });
         }
