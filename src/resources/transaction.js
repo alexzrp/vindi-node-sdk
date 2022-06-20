@@ -1,10 +1,9 @@
-
 const Resource = require('./resource')
 
 class Transaction extends Resource {
-    endpoint() {
-        return 'transactions'
-    }
+  endpoint() {
+    return 'transactions'
+  }
 }
 
 module.exports = Transaction

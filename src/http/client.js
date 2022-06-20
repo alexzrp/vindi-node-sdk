@@ -12,7 +12,7 @@ class Client {
     }
     
     this.config = config ? config : {}
-  
+    
     this.axios = Axios.create({
       headers: {
         Authorization: this.createBasicAuth(),
@@ -52,7 +52,7 @@ class Client {
   }
   
   get(uri, params) {
-    return this.axios.get(uri, { params })
+    return this.axios.get(uri, {params})
   }
   
   post(uri, params) {
@@ -64,7 +64,7 @@ class Client {
   }
   
   delete(uri, params) {
-    return this.axios.delete(uri, { params })
+    return this.axios.delete(uri, {params})
   }
 }
 
