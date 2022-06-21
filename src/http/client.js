@@ -2,17 +2,17 @@ const Axios = require('axios')
 
 class Client {
   constructor(config) {
-    
+
     if (!config.apiKey) {
       config.apiKey = process.env.VINDI_API_KEY
     }
-    
+
     if (!config.apiKey) {
       throw new Error('The apiKey is required.')
     }
-    
+
     this.config = config ? config : {}
-    
+
     this.axios = Axios.create({
       headers: {
         Authorization: this.createBasicAuth(),
@@ -42,27 +42,27 @@ class Client {
       },
     );
   }
-  
+
   encodeApiKey() {
     return Buffer.from(this.config.apiKey).toString('base64')
   }
-  
+
   createBasicAuth() {
     return `Basic ${this.encodeApiKey()}`
   }
-  
+
   get(uri, params) {
     return this.axios.get(uri, {params})
   }
-  
+
   post(uri, params) {
     return this.axios.post(uri, params)
   }
-  
+
   put(uri, params) {
     return this.axios.put(uri, params)
   }
-  
+
   delete(uri, params) {
     return this.axios.delete(uri, {params})
   }
